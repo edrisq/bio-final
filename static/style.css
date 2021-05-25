@@ -1,7 +1,8 @@
 body {
-  font-family: "helvetica", sans-serif;
-  text-align: center;
-  overflow-wrap: break-word;
-  word-wrap: break-word;
-  word-break: break-word;
+    font-family: "helvetica", sans-serif;
+    text-align: center;
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+    word-break: break-word;
+    background-color: lightblue;
 }
