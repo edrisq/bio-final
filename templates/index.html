@@ -1,35 +1,21 @@
 <!doctype html>
 
-<html>
-<head>
-  <title>ORF Finder</title>
-  <script src="{{ url_for('static', filename='script.js') }}"></script>
-  <link type="text/css" rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-</head>
+{% extends "layout.html" %}
+{% block content %}
 
+<html>
 <body>
-    <h1>ORF Finder</h1>
-    <form action="orf_finder" method="POST" enctype="multipart/form-data">
-        Enter accession number: <input type="text" name="acc"> <input type="submit" name="submit" value="Submit">
-    </form>
-    
-    <table style="width:100%">
-      <tr>
-        <th>Firstname</th>
-        <th>Lastname</th>
-        <th>Age</th>
-      </tr>
-      <tr>
-        <td>Jill</td>
-        <td>Smith</td>
-        <td>50</td>
-      </tr>
-      <tr>
-        <td>Eve</td>
-        <td>Jackson</td>
-        <td>94</td>
-      </tr>
-    </table>
+  <h1>Sequence Alignment</h1>
+  <form action="table_init" method="POST" enctype="multipart/form-data">
+    <p>Sequence 1: <input type="text" name="seq1"></p> 
+    <p>Sequence 2: <input type="text" name="seq2"></p>
+    <p><input type="submit" name="submit" value="Submit"></p>
+
+    {% block table %}{% endblock %}
+  </form>
+
 </body>
 
-</html> 
+</html>
+
+{% endblock %}

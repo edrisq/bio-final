@@ -1,0 +1,34 @@
+<!doctype html>
+
+{% extends "index.html" %}
+{% block table %}
+
+<body>
+    <table>
+        <tr>
+          <td></td>
+          <td></td>
+          {% for base in seq1 %}
+            <th> {{ base }} </th>
+          {% endfor %}
+          </tr>
+        <tr>
+          <td></td>
+          <td></td>
+          {% for base in seq1 %}
+            <td> </td>
+          {% endfor %}
+        </tr>
+        {% for base in seq2 %}
+        <tr>
+          <th> {{base}}</th>
+          <td></td>
+          {% for base in seq1 %}
+            <td> </td>
+          {% endfor %}
+        </tr>
+        {% endfor %}
+      </table>
+</body>
+
+{% endblock %}

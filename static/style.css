@@ -1,8 +1,23 @@
+
 body {
     font-family: "helvetica", sans-serif;
     text-align: center;
     overflow-wrap: break-word;
     word-wrap: break-word;
     word-break: break-word;
-    background-color: lightblue;
+    background-color: white;
+    padding: 1rem;
+}
+table {
+    table-layout: fixed;
+}
+td, th {
+    width: 50px;
+    height: 50px;
+    border: 1px solid #ccc;
+    text-align: center;
+  }
+th {
+    background: lightblue;
+    border-color: white;
 }
