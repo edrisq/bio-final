@@ -1,6 +1,7 @@
 import datetime
 
 from fasta.fasta import acc_to_ORFs
+from fasta.align import needleman_wunsch, smith_waterman
 
 from flask import Flask, render_template, request
 
@@ -14,7 +15,23 @@ def root():
 def table_init():
     seq1 = request.form.get('seq1')
     seq2 = request.form.get('seq2')
+
     return render_template('init.html', seq1=seq1, seq2=seq2)
+
+@app.route('/table_fill', methods=['GET', 'POST'])
+def table_fill():
+    seq1 = request.form.get('seq1')
+    seq2 = request.form.get('seq2')
+    algo = request.form.get('algo')
+    matrix = request.form.get('matrix')
+    gap = request.form.get('gap')
+
+    if algo == 'nw':
+        (f, sources) = needleman_wunsch(seq1, seq2, matrix, gap)
+    else:
+        (f, sources) = smith_waterman(seq1, seq2, matrix, gap)
+
+    return render_template('fill.html', seq1=seq1, seq2=seq2, algo=algo, matrix=matrix, gap=gap, f=f, sources=sources)
 
 @app.route('/orf_finder')
 def orf_root():

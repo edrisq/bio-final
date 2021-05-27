@@ -17,18 +17,19 @@
         <input type="hidden" name="seq2" value={{seq2}}>
         <p>Algorithm: 
             <select class="form-select" name="algo" data-width="fit">
-            <option value="nw">Needleman-Wunsch (Global)</option>
-            <option value="sw">Smith-Waterman (Local)</option>
+              <option value="nw" {% if algo == 'nw' %} selected {% endif %}>Needleman-Wunsch (Global)</option>
+              <option value="sw" {% if algo == 'sw' %} selected {% endif %}>Smith-Waterman (Local)</option>
             </select>
         </p>
+
         <p>Scoring Matrix: 
             <select class="form-select" name="matrix" data-width="fit">
-            <option value="blosum62">blosum62</option>
-            <option value="pam250">pam250</option>
-            <option value="simple">simple</option>
+            <option value="blosum62" {% if matrix == 'blosum62' %} selected {% endif %}>blosum62</option>
+            <option value="pam250" {% if matrix == 'pam250' %} selected {% endif %}>pam250</option>
+            <option value="simple" {% if matrix == 'simple' %} selected {% endif %}>simple</option>
             </select>
         </p>
-        <p>Gap Penalty: <input type="number" name="gap" value=-2></p>
+        <p>Gap Penalty: <input type="number" name="gap" value={{gap}}></p>
         <p><input type="submit" name="submit" value="Align"></p>
     </form>
 
@@ -42,17 +43,18 @@
           </tr>
         <tr>
           <td class="no_border"></td>
-          <td></td>
+          <td> {{f[0][0]}} </td>
           {% for base in seq1 %}
-            <td> </td>
+            <td> {{ f[0][loop.index] }} </td>
           {% endfor %}
         </tr>
         {% for base in seq2 %}
         <tr>
-          <th> {{base}}</th>
-          <td></td>
+          <th>{{base}}</th>
+          <td> {{f[loop.index][0]}} </td>
+          {% set i = loop.index %}
           {% for base in seq1 %}
-            <td> </td>
+            <td> {{f[i][loop.index]}} </td>
           {% endfor %}
         </tr>
         {% endfor %}

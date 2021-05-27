@@ -6,18 +6,45 @@ body {
     word-wrap: break-word;
     word-break: break-word;
     background-color: white;
-    padding: 1rem;
+}
+div {
+    display: inline-block;
+    padding: 5px;
 }
 table {
     table-layout: fixed;
+    border-spacing: 1px;
+    border-collapse: separate;
+    margin-left:auto;
+    margin-right:auto;
+    width: fit-content;
+    overflow: scroll;
 }
 td, th {
     width: 50px;
     height: 50px;
     border: 1px solid #ccc;
     text-align: center;
-  }
+}
 th {
     background: lightblue;
     border-color: white;
+}
+.content {
+    padding: 20px;
+}
+.form-select {
+    width: fit-content;
+    margin-left:auto;
+    margin-right:auto;
+    display: inline-block;
+}
+.complete {
+    background-color: lightgray;
+}
+.center {
+    text-align: center;
+}
+.no_border {
+    border: 1px solid white;
 }

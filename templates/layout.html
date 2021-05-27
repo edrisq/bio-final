@@ -8,11 +8,33 @@
     <link type="text/css" rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
   </head>
   <body>
-    <p><strong>Navigation:</strong> <a href="/">Home</a> <a href="/orf_finder">ORF Finder</a> <a href="mailto:edrisq@uchicago.edu">Contact me</a></p>
-    {% block content %}{% endblock %}
+    <nav class="navbar navbar-expand-lg navbar-light bg-light" style="padding-left: 20px;">
+        <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo02" aria-controls="navbarTogglerDemo02" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <a class="navbar-brand" href="/">Edris Q Bioinformatics Final Project</a>
+      
+        <div class="collapse navbar-collapse" id="navbarTogglerDemo02">
+          <ul class="navbar-nav mr-auto mt-2 mt-md-0">
+            <li class="nav-item">
+              <a class="nav-link" href="/">Home</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/orf_finder">ORF Finder</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="mailto:edrisq@uchicago.edu">Contact Me</a>
+            </li>
+          </ul>
+        </div>
+    </nav>
+    <!-- <p><strong>Navigation:</strong> <a href="/">Home</a> <a href="/orf_finder">ORF Finder</a> <a href="mailto:edrisq@uchicago.edu">Contact me</a></p> -->
+    <div class="content">
+        {% block content %}{% endblock %}
+    </div>
     <p></p>
     <p></p>
-    <p>&copy; 2021 Edris Qarghah</p>
+    <p>Edris Qarghah &copy; 2021</p>
     
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-gtEjrD/SeCtmISkJkNUaaKMoLD0//ElJ19smozuHV6z3Iehds+3Ulb9Bn9Plx0x4" crossorigin="anonymous"></script>
   </body>

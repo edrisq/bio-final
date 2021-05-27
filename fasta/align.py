@@ -295,7 +295,18 @@ def mat_print(matrix, seq1, seq2):
             print(f"{str(matrix[i+1][j+1]):^{width}}", end="")
         print()
 
-def needleman_wunsch(seq1, seq2, matrix, gap):
+def needleman_wunsch(seq1, seq2, mat_name, gap):
+    gap = int(gap)
+    seq1 = seq1.upper()
+    seq2 = seq2.upper()
+
+    if mat_name == 'pam250':
+        matrix = pam250
+    elif mat_name == 'blosum62':
+        matrix = blosum62
+    else:
+        matrix = simple_matrix
+
     # f matrix stores scores
     f = [[0 for _ in range(len(seq1) + 1)] for _ in range(len(seq2) + 1)]
     
@@ -313,7 +324,12 @@ def needleman_wunsch(seq1, seq2, matrix, gap):
         for i in range(len(seq2)):
             up = f[i][j + 1] + gap
             left = f[i + 1][j] + gap
-            diag = f[i][j] + matrix[(seq2[i],seq1[j])]
+            try:
+                score = matrix[(seq2[i],seq1[j])]
+            except:
+                score = gap
+
+            diag = f[i][j] + score
             best = max(up, left, diag)
 
             # As only the first is read, this is left-first
@@ -332,7 +348,18 @@ def needleman_wunsch(seq1, seq2, matrix, gap):
 #     mat_print(sources, seq1, seq2)
     
 
-def smith_waterman(seq1, seq2, matrix, gap):
+def smith_waterman(seq1, seq2, mat_name, gap):
+    gap = int(gap)
+    seq1 = seq1.upper()
+    seq2 = seq2.upper()
+
+    if mat_name == 'pam250':
+        matrix = pam250
+    elif mat_name == 'blosum62':
+        matrix = blosum62
+    else:
+        matrix = simple_matrix
+
     f = [[0 for _ in range(len(seq1) + 1)] for _ in range(len(seq2) + 1)]
     sources = [[[] for _ in range(len(seq1) + 1)] for _ in range(len(seq2) + 1)]
     
@@ -340,7 +367,13 @@ def smith_waterman(seq1, seq2, matrix, gap):
         for i in range(len(seq2)):
             up = f[i][j + 1] + gap
             left = f[i + 1][j] + gap
-            diag = f[i][j] + matrix[(seq2[i],seq1[j])]
+
+            try:
+                score = matrix[(seq2[i],seq1[j])]
+            except:
+                score = gap
+
+            diag = f[i][j] + score
             best = max(up, left, diag, 0)
             
             if best == left:
@@ -412,13 +445,7 @@ def local_score(seq1, seq2, matrix, gap):
 def main():
     args = parser.parse_args()
     
-    if args.matrix[0] == 'pam250':
-        matrix = pam250
-    elif args.matrix[0] == 'blosum62':
-        matrix = blosum62
-    elif args.matrix[0] == 'simple':
-        matrix = simple_matrix
-    else:
+    if args.matrix[0] not in ['pam250', 'blosum62', 'simple']:
         print("Invalid matrix. Enter pam250, blosum62 or simple")
         return
     
@@ -433,7 +460,7 @@ def main():
         print(args.seq2 + ' does not exist.')
         return
     
-    align_sequences(args.seq1[0], args.seq2[0], args.type[0], matrix, args.gap[0])
+    align_sequences(args.seq1[0], args.seq2[0], args.type[0], args.matrix[0], args.gap[0])
 
 if __name__ == "__main__":
     main()
