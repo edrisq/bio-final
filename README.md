@@ -8,7 +8,7 @@
 
 This project is an web visualization of the Needleman-Wunsch and Smith-Waterman sequence alignment algorithms. To run locally, first make sure you're in an environment running python3, then `pip install -r requirements.txt`. You can then simply run `main.py`.
 
-You can also find the project online for the time being, hosted [here](https://seismic-hope-272623.uc.r.appspot.com).
+You can also find the project online for the time being, hosted [here](https://seismic-hope-272623.uc.r.appspot.com). It may not be the most recent version of the app (i.e., it may have bugs not present if you run the provided code locally).
 
 ##### Functionality
 
@@ -18,4 +18,4 @@ For Needleman-Wunsch (global alignment), this will start in the bottom right cor
 
 ##### Known funkiness
 
-I appear to unintentionally be saving some details between runs. This means that if you change the sequence alignment, for example, your trace-back arrow may be wrong for a single frame.
+I appear to unintentionally be saving some details between runs. This means that if you change the sequence alignment, for example, your trace-back arrow may be wrong for a single frame. The indexing was working correctly before the class demo, so I'm guessing I messed something up in my last set of edits. Not sure if the version with the indexing issue is the one on the repo or not.
