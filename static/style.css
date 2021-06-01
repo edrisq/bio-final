@@ -42,7 +42,7 @@ th {
     display: inline-block;
 }
 .complete {
-    background-color: lightgray;
+    background-color: rgb(244, 241, 255);
 }
 .center {
     text-align: center;
@@ -64,6 +64,12 @@ th {
     position: absolute;
     left: -13px;
     top: 10px;
+}
+.inline {
+    display: inline-block;
+}
+.top {
+    vertical-align: top;
 }
 /* td:not(:first-child){    
     opacity: 0;

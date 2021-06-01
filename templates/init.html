@@ -4,37 +4,41 @@
 {% block content %}
 
 <body>
-    <h1>Sequence Alignment</h1>
-
-    <form action="table_init" method="POST" enctype="multipart/form-data">
-        <p>Sequence 1: <input type="text" name="seq1" value={{seq1}}></p> 
-        <p>Sequence 2: <input type="text" name="seq2" value={{seq2}}></p>
-        <p><input type="submit" name="submit" value="Create Table"></p>
-    </form>
-
-    <form action="table_fill" method="POST" enctype="multipart/form-data">
-        <input type="hidden" name="seq1" value={{seq1}}> 
-        <input type="hidden" name="seq2" value={{seq2}}>
-        <input type="hidden" name="index" value=0>
-        <input type="hidden" name="scroll" value=window.pageYOffset>
-        <p>Algorithm: 
-            <select class="form-select" name="algo" data-width="fit">
-            <option value="nw">Needleman-Wunsch (Global)</option>
-            <option value="sw">Smith-Waterman (Local)</option>
-            </select>
-        </p>
-        <p>Scoring Matrix: 
-            <select class="form-select" name="matrix" data-width="fit">
-            <option value="blosum62">blosum62</option>
-            <option value="pam250">pam250</option>
-            <option value="simple">simple</option>
-            </select>
-        </p>
-        <p>Gap Penalty: <input type="number" name="gap" value=-2></p>
-        <p><input type="submit" name="submit" value="Align"></p>
-    </form>
-
-    <table>
+  <div>
+    <div class = "top">
+      <h1>Sequence Alignment</h1>
+  
+      <form action="table_init" method="POST" enctype="multipart/form-data" class="complete">
+          <p>Sequence 1: <input type="text" name="seq1" value={{seq1}}></p> 
+          <p>Sequence 2: <input type="text" name="seq2" value={{seq2}}></p>
+          <p><input type="submit" name="submit" value="Create Table"></p>
+      </form>
+  
+      <form action="table_opts" method="POST" enctype="multipart/form-data">
+          <input type="hidden" name="seq1" value={{seq1}}> 
+          <input type="hidden" name="seq2" value={{seq2}}>
+          <input type="hidden" name="index" value=0>
+          <input type="hidden" name="scroll" value=window.pageYOffset>
+          <input type="hidden" name="step" value=0>
+          <p>Algorithm: 
+              <select class="form-select" name="algo" data-width="fit">
+              <option value="nw">Needleman-Wunsch (Global)</option>
+              <option value="sw">Smith-Waterman (Local)</option>
+              </select>
+          </p>
+          <p>Scoring Matrix: 
+              <select class="form-select" name="matrix" data-width="fit">
+              <option value="blosum62">blosum62</option>
+              <option value="pam250">pam250</option>
+              <option value="simple">simple</option>
+              </select>
+          </p>
+          <p>Gap Penalty: <input type="number" name="gap" value=-2></p>
+          <p><input type="submit" name="submit" value="Align"></p>
+      </form>
+    </div>
+    <div>
+      <table>
         <tr>
           <td class="no_border"></td>
           <td class="no_border"></td>
@@ -58,7 +62,11 @@
           {% endfor %}
         </tr>
         {% endfor %}
-    </table>
+      </table>
+    </div>
+  </div>
+  
+    
 </body>
 
 {% endblock %}

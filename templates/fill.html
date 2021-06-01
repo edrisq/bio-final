@@ -4,107 +4,297 @@
 {% block content %}
 
 <body>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
-              
-    <h1>Sequence Alignment</h1>
+  <div>
+    <div class = "top">
+      <h1>Sequence Alignment</h1>
+      <form action="table_init" method="POST" enctype="multipart/form-data" {% if seq1 is defined %} class="complete" {% endif %}>
+          <p>Sequence 1: <input type="text" name="seq1" value={{seq1}}></p> 
+          <p>Sequence 2: <input type="text" name="seq2" value={{seq2}}></p>
+          <p><input type="submit" name="submit" value="Create Table"></p>
+      </form>
 
-    <form action="table_init" method="POST" enctype="multipart/form-data">
-        <p>Sequence 1: <input type="text" name="seq1" value={{seq1}}></p> 
-        <p>Sequence 2: <input type="text" name="seq2" value={{seq2}}></p>
-        <p><input type="submit" name="submit" value="Create Table"></p>
-    </form>
+      {% if seq1 is defined %}
+      <form action="table_opts" method="POST" enctype="multipart/form-data" {% if matrix is defined %} class="complete" {% endif %}>
+          <input type="hidden" name="seq1" value={{seq1}}> 
+          <input type="hidden" name="seq2" value={{seq2}}>
+          <input type="hidden" name="index" value={{index}}>
+          <input type="hidden" name="step" value=0>
+          <p>Algorithm: 
+              <select class="form-select" name="algo" data-width="fit">
+                <option value="nw" {% if algo == 'nw' %} selected {% endif %}>Needleman-Wunsch (Global)</option>
+                <option value="sw" {% if algo == 'sw' %} selected {% endif %}>Smith-Waterman (Local)</option>
+              </select>
+          </p>
 
-    <form action="table_fill" method="POST" enctype="multipart/form-data">
+          <p>Scoring Matrix: 
+              <select class="form-select" name="matrix" data-width="fit">
+              <option value="blosum62" {% if matrix == 'blosum62' %} selected {% endif %}>blosum62</option>
+              <option value="pam250" {% if matrix == 'pam250' %} selected {% endif %}>pam250</option>
+              <option value="simple" {% if matrix == 'simple' %} selected {% endif %}>simple</option>
+              </select>
+          </p>
+          <p>Gap Penalty: <input type="number" name="gap" value={{gap}}></p>
+          <p><input type="submit" name="submit" value="Align"></p>
+      </form>
+      {% endif %}
+
+      {% if matrix is defined %}
+      <form action="table_fill" method="POST" enctype="multipart/form-data" {% if step == "3" %} class = "complete" {% endif %}>
         <input type="hidden" name="seq1" value={{seq1}}> 
         <input type="hidden" name="seq2" value={{seq2}}>
         <input type="hidden" name="index" value={{index}}>
-        <p>Algorithm: 
-            <select class="form-select" name="algo" data-width="fit">
-              <option value="nw" {% if algo == 'nw' %} selected {% endif %}>Needleman-Wunsch (Global)</option>
-              <option value="sw" {% if algo == 'sw' %} selected {% endif %}>Smith-Waterman (Local)</option>
-            </select>
+        <input type="hidden" name="algo" value={{algo}}>
+        <input type="hidden" name="matrix" value={{matrix}}>
+        <input type="hidden" name="gap" value={{gap}}>
+        <input type="hidden" name="f" value={{f}}>
+        <input type="hidden" name="sources" value={{sources}}>
+        <p> Step size
+          <select class="form-select" name="step" data-width="fit">
+            <option value=-3>Empty</option> 
+            <option value=-2 {% if step == "-2" %} selected {% endif %}>-1 row</option>
+            <option value=-1 {% if step == "-1" %} selected {% endif %}>-1</option>
+            <option value=1 {% if step == "1" %} selected {% endif %}>+1</option>
+            <option value=2 {% if step == "2" %} selected {% endif %}>+1 row</option>
+            <option value=3 {% if step == "3" %} selected {% endif %}>Fill</option>
+          </select>
+        
+          <input type="submit" name="submit" value="Step">
         </p>
+      </form>
+      {% endif %}
 
-        <p>Scoring Matrix: 
-            <select class="form-select" name="matrix" data-width="fit">
-            <option value="blosum62" {% if matrix == 'blosum62' %} selected {% endif %}>blosum62</option>
-            <option value="pam250" {% if matrix == 'pam250' %} selected {% endif %}>pam250</option>
-            <option value="simple" {% if matrix == 'simple' %} selected {% endif %}>simple</option>
-            </select>
+      {% if step == "3" %}
+      <form action="table_trace" method="POST" enctype = "multipart/form-data">
+        <input type="hidden" name="seq1" value={{seq1}}> 
+        <input type="hidden" name="seq2" value={{seq2}}>
+        <input type="hidden" name="index" value={{index}}>
+        <input type="hidden" name="algo" value={{algo}}>
+        <input type="hidden" name="matrix" value={{matrix}}>
+        <input type="hidden" name="gap" value={{gap}}>
+        <input type="hidden" name="step" value={{step}}>
+        <input type="hidden" name="f" value={{f}}>
+        <input type="hidden" name="sources" value={{sources}}>
+        <input type="hidden" name="icurr" {% if icurr is defined %} value={{icurr}} {% endif %}>
+        <input type="hidden" name="jcurr" {% if jcurr is defined %} value={{jcurr}} {% endif %}>
+        <!-- <p> Step
+          <select class="form-select" name="trace_step" data-width="fit">
+            <option value=-1 {% if step == "-1" %} selected {% endif %}>backward</option>
+            <option value=1 {% if step == "1" %} selected {% endif %}>forward</option>
+          </select> -->
+        <input type="submit" name="trace" value="Trace">
         </p>
-        <p>Gap Penalty: <input type="number" name="gap" value={{gap}}></p>
-        <p><input type="submit" name="submit" value="Align"></p>
-    </form>
+      </form>
+      {% endif %}
+    </div>
 
-    <form action="table_fill" method="POST" enctype="multipart/form-data">
-      {% set index = index | int + 1 %}
-      <input type="hidden" name="seq1" value={{seq1}}> 
-      <input type="hidden" name="seq2" value={{seq2}}>
-      <input type="hidden" name="index" value={{index}}>
-      <input type="hidden" name="algo" value={{algo}}>
-      <input type="hidden" name="matrix" value={{matrix}}>
-      <input type="hidden" name="gap" value={{gap}}>
-      <p><input type="submit" name="submit" value="Step"></p>
-    </form>
+    {% if icurr is not defined %}
+      {% set icurr = seq1|length %}
+      {% set jcurr = seq2|length %}
+      {% if step == "3" %}
+        {% set imax = seq1|length %}
+        {% set jmax = seq2|length %}
+      {% endif %}
+    {% endif %}
 
-    <table class="dptable">
-        <tr class="header">
-          <td class="no_border"></td>
-          <td class="no_border"></td>
-          {% for base in seq1 %}
-            <th> {{ base }} </th>
-          {% endfor %}
+    {% if seq1 is defined %}
+    {% if step != "3" %}
+    <div>
+      <table class="dptable">
+          <!-- First row, seq 1 -->
+          <tr class="header">
+            <td class="no_border"></td>
+            <td class="no_border"></td>
+            {% for base in seq1 %}
+              <th> {{ base }} </th>
+            {% endfor %}
+            </tr>
+
+          <!-- Second row, seq 1 init -->
+          <tr class="header">
+            <td class="no_border"></td>
+            <td> {% if f is defined %} {{f[0][0]}} {% endif %} </td>
+            {% for base in seq1 %}
+              <td> 
+                {% if f is defined %} 
+                {{ f[0][loop.index] }}
+                {% endif %}
+              </td>
+            {% endfor %}
           </tr>
-        <tr class="header">
-          <td class="no_border"></td>
-          <td> {{f[0][0]}} </td>
-          {% for base in seq1 %}
-            <td> 
-              {{ f[0][loop.index] }}
-            </td>
-          {% endfor %}
-        </tr>
-        {% for base in seq2 %}
-        <tr>
-          <th class="header">{{base}}</th>
-          <td class="header"> {{f[loop.index][0]}} </td>
-          {% set i = loop.index %}
-          {% for base in seq1 %}
-            <td>
-              {% if i < imax | int %}
-                {{f[i][loop.index]}}
-                {% for source in sources[i][loop.index] %}
-                  {% if source == (0, -1) %}
-                    <img src="{{url_for('static', filename='images/right.svg')}}" class="right" />
-                  {% endif %}
-                  {% if source == (-1, -1) %}
-                    <img src="{{url_for('static', filename='images/ddown.svg')}}" class="ddown" />
-                  {% endif %}
-                  {% if source == (-1, 0) %}
-                    <img src="{{url_for('static', filename='images/down.svg')}}" class="down" />
-                  {% endif %}
-                {% endfor %}
-              {% elif i == imax | int %}
-                {% if loop.index <= jmax | int %}
+
+          <!-- Iterate through remaining rows, each corresponding to a letter in seq2 -->
+          {% for base in seq2 %}
+          <tr>
+            <!-- Always fill in seq2 and seq2 init -->
+            <th class="header">{{base}}</th>
+            <td class="header"> {% if f is defined %} {{f[loop.index][0]}}  {% endif %} </td>
+            {% set i = loop.index %}
+
+            <!-- Iterate through columns in row, each corresponding to a letter in seq1 -->
+            {% for base in seq1 %}
+              <!-- cell is created regardless -->
+              <td>
+                <!-- Fill all cells in rows less than the maximum row value -->
+                {% if imax is defined %}
+                {% if i < imax | int %}
                   {{f[i][loop.index]}}
+
+                  <!-- Loop through sources for the entry in this cell -->
                   {% for source in sources[i][loop.index] %}
+                    <!-- Source from the left means arrow is coming from cell to the left -->
                     {% if source == (0, -1) %}
-                      <img src="{{url_for('static', filename='images/right.svg')}}" class="right" />
+                      <!-- Right arrow if filling, left arrow if tracing -->
+                      <!-- {% if step != "3" %} -->
+                        <img src="{{url_for('static', filename='images/right.svg')}}" class="right" />
+                      <!-- Only draw arrow for current cell -->
+                      <!-- {% elif i == ij[0] | int and loop.index == ij[1] | int %}
+                        <img src="{{url_for('static', filename='images/left.svg')}}" class="right" />
+                      {% endif %} -->
                     {% endif %}
+                    <!-- Source from the diagonal means arrow coming from cell to top left) -->
                     {% if source == (-1, -1) %}
-                      <img src="{{url_for('static', filename='images/ddown.svg')}}" class="ddown" />
+                      <!-- {% if step != "3" %} -->
+                        <img src="{{url_for('static', filename='images/ddown.svg')}}" class="ddown" />
+                      <!-- {% elif i == ij[0] | int and loop.index == ij[1] | int %}
+                        <img src="{{url_for('static', filename='images/dup.svg')}}" class="ddown" />
+                      {% endif %} -->
                     {% endif %}
+                    <!-- Source from row above means arrow coming from cell above -->
                     {% if source == (-1, 0) %}
-                      <img src="{{url_for('static', filename='images/down.svg')}}" class="down" />
+                      <!-- {% if step != "3" %} -->
+                        <img src="{{url_for('static', filename='images/down.svg')}}" class="down" />
+                      <!-- {% elif i == ij[0] | int and loop.index == ij[1] | int %}
+                        <img src="{{url_for('static', filename='images/up.svg')}}" class="down" />
+                      {% endif %} -->
                     {% endif %}
                   {% endfor %}
+                
+                <!-- Partially fill the maximum row -->
+                {% elif i == imax | int %}
+                  <!-- Only fill cells with a column less than the j max -->
+                  {% if loop.index <= jmax | int %}
+                    {{f[i][loop.index]}}
+                    <!-- Same conditions as above -->
+                    {% for source in sources[i][loop.index] %}
+                      {% if source == (0, -1) %}
+                        <!-- {% if step != "3" %} -->
+                          <img src="{{url_for('static', filename='images/right.svg')}}" class="right" />
+                        <!-- {% elif i == ij[0] | int and loop.index == ij[1] | int %}
+                          <img src="{{url_for('static', filename='images/left.svg')}}" class="right" />
+                        {% endif %} -->
+                      {% endif %}
+                      {% if source == (-1, -1) %}
+                        <!-- {% if step != "3" %} -->
+                          <img src="{{url_for('static', filename='images/ddown.svg')}}" class="ddown" />
+                        <!-- {% elif i == ij[0] | int and loop.index == ij[1] | int %}
+                          <img src="{{url_for('static', filename='images/dup.svg')}}" class="ddown" />
+                        {% endif %} -->
+                      {% endif %}
+                      {% if source == (-1, 0) %}
+                        <!-- {% if step != "3" %} -->
+                          <img src="{{url_for('static', filename='images/down.svg')}}" class="down" />
+                        <!-- {% elif i == ij[0] | int and loop.index == ij[1] | int %}
+                          <img src="{{url_for('static', filename='images/up.svg')}}" class="down" />
+                        {% endif %} -->
+                      {% endif %}
+                    {% endfor %}
+                  {% endif %}
                 {% endif %}
-              {% endif %}
-            </td>
+                {% endif %}
+              </td>
+            {% endfor %}
+          </tr>
           {% endfor %}
-        </tr>
-        {% endfor %}
-    </table>
+      </table>
+    </div>
+
+    {% else %}
+    <div>
+      <table class="dptable">
+          <!-- First row, seq 1 -->
+          <tr class="header">
+            <td class="no_border"></td>
+            <td class="no_border"></td>
+            {% for base in seq1 %}
+              <th> {{ base }} </th>
+            {% endfor %}
+            </tr>
+
+          <!-- Second row, seq 1 init -->
+          <tr class="header">
+            <td class="no_border"></td>
+            <td> {{f[0][0]}} </td>
+            {% for base in seq1 %}
+              <td> 
+                {{ f[0][loop.index] }}
+              </td>
+            {% endfor %}
+          </tr>
+
+          <!-- Iterate through remaining rows, each corresponding to a letter in seq2 -->
+          {% for base in seq2 %}
+          <tr>
+            <!-- Always fill in seq2 and seq2 init -->
+            <th class="header">{{base}}</th>
+            <td class="header"> {{f[loop.index][0]}} </td>
+            {% set i = loop.index %}
+
+            <!-- Iterate through columns in row, each corresponding to a letter in seq1 -->
+            {% for base in seq1 %}
+              <!-- cell is created regardless -->
+              <td>
+                <!-- Fill all cells in rows less than the maximum row value -->
+                {% if i < imax | int %}
+                  {{f[i][loop.index]}}
+
+                  <!-- Loop through sources for the entry in this cell -->
+                  {% if i == icurr | int and loop.index == jcurr | int %}
+                    {% for source in sources[i][loop.index] %}
+                      <!-- Source from the left means arrow is coming from cell to the left -->
+                      {% if source == (0, -1)%}
+                          <img src="{{url_for('static', filename='images/left.svg')}}" class="right" />
+                      {% endif %}
+                      <!-- Source from the diagonal means arrow coming from cell to top left) -->
+                      {% if source == (-1, -1) %}
+                          <img src="{{url_for('static', filename='images/dup.svg')}}" class="ddown" />
+                      {% endif %}
+                      <!-- Source from row above means arrow coming from cell above -->
+                      {% if source == (-1, 0) %}
+                          <img src="{{url_for('static', filename='images/up.svg')}}" class="down" />
+                      {% endif %}
+                    {% endfor %}
+                  {% endif %}
+                
+                <!-- Partially fill the maximum row -->
+                {% elif i == imax | int %}
+                  <!-- Only fill cells with a column less than the j max -->
+                  {% if loop.index <= jmax | int %}
+                    {{f[i][loop.index]}}
+                    <!-- Same conditions as above -->
+                    {% if i == icurr | int and loop.index == jcurr | int %}
+                      {% for source in sources[i][loop.index] %}
+                        {% if source == (0, -1) %}
+                          <img src="{{url_for('static', filename='images/left.svg')}}" class="right" />
+                        {% endif %}
+                        {% if source == (-1, -1) %}
+                          <img src="{{url_for('static', filename='images/dup.svg')}}" class="ddown" />
+                        {% endif %}
+                        {% if source == (-1, 0) %}
+                          <img src="{{url_for('static', filename='images/up.svg')}}" class="down" />
+                        {% endif %}
+                      {% endfor %}
+                    {% endif %}
+                  {% endif %}
+                {% endif %}
+              </td>
+            {% endfor %}
+          </tr>
+          {% endfor %}
+      </table>
+    </div>
+    {% endif %}
+    {% endif %}
+  </div>
 </body>
 
 {% endblock %}

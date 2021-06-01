@@ -1,0 +1,143 @@
+<!doctype html>
+
+{% extends "layout.html" %}
+{% block content %}
+
+<body>
+  <div>
+    <div class = "top">
+      <h1>Sequence Alignment</h1>
+      <form action="table_init" method="POST" enctype="multipart/form-data" class="complete">
+          <p>Sequence 1: <input type="text" name="seq1" value={{seq1}}></p> 
+          <p>Sequence 2: <input type="text" name="seq2" value={{seq2}}></p>
+          <p><input type="submit" name="submit" value="Create Table"></p>
+      </form>
+
+      <form action="table_fill" method="POST" enctype="multipart/form-data" class="complete">
+          <input type="hidden" name="seq1" value={{seq1}}> 
+          <input type="hidden" name="seq2" value={{seq2}}>
+          <input type="hidden" name="index" value={{index}}>
+          <input type="hidden" name="step" value=0>
+          <p>Algorithm: 
+              <select class="form-select" name="algo" data-width="fit">
+                <option value="nw" {% if algo == 'nw' %} selected {% endif %}>Needleman-Wunsch (Global)</option>
+                <option value="sw" {% if algo == 'sw' %} selected {% endif %}>Smith-Waterman (Local)</option>
+              </select>
+          </p>
+
+          <p>Scoring Matrix: 
+              <select class="form-select" name="matrix" data-width="fit">
+              <option value="blosum62" {% if matrix == 'blosum62' %} selected {% endif %}>blosum62</option>
+              <option value="pam250" {% if matrix == 'pam250' %} selected {% endif %}>pam250</option>
+              <option value="simple" {% if matrix == 'simple' %} selected {% endif %}>simple</option>
+              </select>
+          </p>
+          <p>Gap Penalty: <input type="number" name="gap" value={{gap}}></p>
+          <p><input type="submit" name="submit" value="Align"></p>
+      </form>
+
+      <form action="table_fill" method="POST" enctype="multipart/form-data" {% if step == "3" %} class = "complete" {% endif %}>
+        <input type="hidden" name="seq1" value={{seq1}}> 
+        <input type="hidden" name="seq2" value={{seq2}}>
+        <input type="hidden" name="index" value={{index}}>
+        <input type="hidden" name="algo" value={{algo}}>
+        <input type="hidden" name="matrix" value={{matrix}}>
+        <input type="hidden" name="gap" value={{gap}}>
+        <p> Step size
+          <select class="form-select" name="step" data-width="fit">
+            <option value=-3>Empty</option> 
+            <option value=-2 {% if step == "-2" %} selected {% endif %}>-1 row</option>
+            <option value=-1 {% if step == "-1" %} selected {% endif %}>-1</option>
+            <option value=1 {% if step == "1" %} selected {% endif %}>+1</option>
+            <option value=2 {% if step == "2" %} selected {% endif %}>+1 row</option>
+            <option value=3>Fill</option>
+          </select>
+        
+          <input type="submit" name="submit" value="Step">
+        </p>
+      </form>
+
+      {% if step == "3" %}
+      <form action="table_trace" method="POST" enctype = "multipart/form-data">
+        <input type="hidden" name="seq1" value={{seq1}}> 
+        <input type="hidden" name="seq2" value={{seq2}}>
+        <input type="hidden" name="index" value={{index}}>
+        <input type="hidden" name="algo" value={{algo}}>
+        <input type="hidden" name="matrix" value={{matrix}}>
+        <input type="hidden" name="gap" value={{gap}}>
+        <input type="hidden" name="step" value={{step}}>
+        <input type="hidden" name="ij" value={{(seq1 | length, seq2 | length)}}>
+        <p> Step
+          <select class="form-select" name="trace_step" data-width="fit">
+            <option value=-1 {% if step == "-1" %} selected {% endif %}>backward</option>
+            <option value=1 {% if step == "1" %} selected {% endif %}>forward</option>
+          </select>
+        <input type="submit" name="trace" value="Trace">
+        </p>
+      </form>
+      {% endif %}
+    </div>
+    <div>
+      <table class="dptable">
+          <tr class="header">
+            <td class="no_border"></td>
+            <td class="no_border"></td>
+            {% for base in seq1 %}
+              <th> {{ base }} </th>
+            {% endfor %}
+            </tr>
+          <tr class="header">
+            <td class="no_border"></td>
+            <td> {{f[0][0]}} </td>
+            {% for base in seq1 %}
+              <td> 
+                {{ f[0][loop.index] }}
+              </td>
+            {% endfor %}
+          </tr>
+          {% for base in seq2 %}
+          <tr>
+            <th class="header">{{base}}</th>
+            <td class="header"> {{f[loop.index][0]}} </td>
+            {% set i = loop.index %}
+            {% for base in seq1 %}
+              <td>
+                {% if i < imax | int %}
+                  {{f[i][loop.index]}}
+                  {% for source in sources[i][loop.index] %}
+                    {% if source == (0, -1) %}
+                      <img src="{{url_for('static', filename='images/right.svg')}}" class="right" />
+                    {% endif %}
+                    {% if source == (-1, -1) %}
+                      <img src="{{url_for('static', filename='images/ddown.svg')}}" class="ddown" />
+                    {% endif %}
+                    {% if source == (-1, 0) %}
+                      <img src="{{url_for('static', filename='images/down.svg')}}" class="down" />
+                    {% endif %}
+                  {% endfor %}
+                {% elif i == imax | int %}
+                  {% if loop.index <= jmax | int %}
+                    {{f[i][loop.index]}}
+                    {% for source in sources[i][loop.index] %}
+                      {% if source == (0, -1) %}
+                        <img src="{{url_for('static', filename='images/right.svg')}}" class="right" />
+                      {% endif %}
+                      {% if source == (-1, -1) %}
+                        <img src="{{url_for('static', filename='images/ddown.svg')}}" class="ddown" />
+                      {% endif %}
+                      {% if source == (-1, 0) %}
+                        <img src="{{url_for('static', filename='images/down.svg')}}" class="down" />
+                      {% endif %}
+                    {% endfor %}
+                  {% endif %}
+                {% endif %}
+              </td>
+            {% endfor %}
+          </tr>
+          {% endfor %}
+      </table>
+    </div>
+  </div>
+</body>
+
+{% endblock %}
