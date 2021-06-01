@@ -122,16 +122,16 @@
             {% endfor %}
           </tr>
 
-          <!-- Iterate through remaining rows, each corresponding to a letter in seq2 -->
-          {% for base in seq2 %}
+          <!-- Iterate through remaining rows, each corresponding to a letter in seq1 -->
+          {% for base in seq1 %}
           <tr>
             <!-- Always fill in seq2 and seq2 init -->
             <th class="header">{{base}}</th>
             <td class="header"> {% if f is defined %} {{f[loop.index][0]}}  {% endif %} </td>
             {% set i = loop.index %}
 
-            <!-- Iterate through columns in row, each corresponding to a letter in seq1 -->
-            {% for base in seq1 %}
+            <!-- Iterate through columns in row, each corresponding to a letter in seq2 -->
+            {% for base in seq2 %}
               <!-- cell is created regardless -->
               <td>
                 <!-- Fill all cells in rows less than the maximum row value -->
@@ -143,29 +143,13 @@
                   {% for source in sources[i][loop.index] %}
                     <!-- Source from the left means arrow is coming from cell to the left -->
                     {% if source == (0, -1) %}
-                      <!-- Right arrow if filling, left arrow if tracing -->
-                      <!-- {% if step != "3" %} -->
                         <img src="{{url_for('static', filename='images/right.svg')}}" class="right" />
-                      <!-- Only draw arrow for current cell -->
-                      <!-- {% elif i == ij[0] | int and loop.index == ij[1] | int %}
-                        <img src="{{url_for('static', filename='images/left.svg')}}" class="right" />
-                      {% endif %} -->
                     {% endif %}
-                    <!-- Source from the diagonal means arrow coming from cell to top left) -->
                     {% if source == (-1, -1) %}
-                      <!-- {% if step != "3" %} -->
                         <img src="{{url_for('static', filename='images/ddown.svg')}}" class="ddown" />
-                      <!-- {% elif i == ij[0] | int and loop.index == ij[1] | int %}
-                        <img src="{{url_for('static', filename='images/dup.svg')}}" class="ddown" />
-                      {% endif %} -->
                     {% endif %}
-                    <!-- Source from row above means arrow coming from cell above -->
                     {% if source == (-1, 0) %}
-                      <!-- {% if step != "3" %} -->
                         <img src="{{url_for('static', filename='images/down.svg')}}" class="down" />
-                      <!-- {% elif i == ij[0] | int and loop.index == ij[1] | int %}
-                        <img src="{{url_for('static', filename='images/up.svg')}}" class="down" />
-                      {% endif %} -->
                     {% endif %}
                   {% endfor %}
                 
@@ -177,25 +161,13 @@
                     <!-- Same conditions as above -->
                     {% for source in sources[i][loop.index] %}
                       {% if source == (0, -1) %}
-                        <!-- {% if step != "3" %} -->
                           <img src="{{url_for('static', filename='images/right.svg')}}" class="right" />
-                        <!-- {% elif i == ij[0] | int and loop.index == ij[1] | int %}
-                          <img src="{{url_for('static', filename='images/left.svg')}}" class="right" />
-                        {% endif %} -->
                       {% endif %}
                       {% if source == (-1, -1) %}
-                        <!-- {% if step != "3" %} -->
                           <img src="{{url_for('static', filename='images/ddown.svg')}}" class="ddown" />
-                        <!-- {% elif i == ij[0] | int and loop.index == ij[1] | int %}
-                          <img src="{{url_for('static', filename='images/dup.svg')}}" class="ddown" />
-                        {% endif %} -->
                       {% endif %}
                       {% if source == (-1, 0) %}
-                        <!-- {% if step != "3" %} -->
                           <img src="{{url_for('static', filename='images/down.svg')}}" class="down" />
-                        <!-- {% elif i == ij[0] | int and loop.index == ij[1] | int %}
-                          <img src="{{url_for('static', filename='images/up.svg')}}" class="down" />
-                        {% endif %} -->
                       {% endif %}
                     {% endfor %}
                   {% endif %}
@@ -231,16 +203,16 @@
             {% endfor %}
           </tr>
 
-          <!-- Iterate through remaining rows, each corresponding to a letter in seq2 -->
-          {% for base in seq2 %}
+          <!-- Iterate through remaining rows, each corresponding to a letter in seq1 -->
+          {% for base in seq1 %}
           <tr>
             <!-- Always fill in seq2 and seq2 init -->
             <th class="header">{{base}}</th>
             <td class="header"> {{f[loop.index][0]}} </td>
             {% set i = loop.index %}
 
-            <!-- Iterate through columns in row, each corresponding to a letter in seq1 -->
-            {% for base in seq1 %}
+            <!-- Iterate through columns in row, each corresponding to a letter in seq2 -->
+            {% for base in seq2 %}
               <!-- cell is created regardless -->
               <td>
                 <!-- Fill all cells in rows less than the maximum row value -->
