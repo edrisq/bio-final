@@ -88,11 +88,11 @@
     </div>
 
     {% if icurr is not defined %}
-      {% set icurr = seq1|length %}
-      {% set jcurr = seq2|length %}
+      {% set icurr = seq2|length %}
+      {% set jcurr = seq1|length %}
       {% if step == "3" %}
-        {% set imax = seq1|length %}
-        {% set jmax = seq2|length %}
+        {% set imax = seq2|length %}
+        {% set jmax = seq1|length %}
       {% endif %}
     {% endif %}
 
@@ -122,8 +122,8 @@
             {% endfor %}
           </tr>
 
-          <!-- Iterate through remaining rows, each corresponding to a letter in seq1 -->
-          {% for base in seq1 %}
+          <!-- Iterate through remaining rows, each corresponding to a letter in seq2 -->
+          {% for base in seq2 %}
           <tr>
             <!-- Always fill in seq2 and seq2 init -->
             <th class="header">{{base}}</th>
@@ -131,7 +131,7 @@
             {% set i = loop.index %}
 
             <!-- Iterate through columns in row, each corresponding to a letter in seq2 -->
-            {% for base in seq2 %}
+            {% for base in seq1 %}
               <!-- cell is created regardless -->
               <td>
                 <!-- Fill all cells in rows less than the maximum row value -->
@@ -182,6 +182,7 @@
 
     {% else %}
     <div>
+
       <table class="dptable">
           <!-- First row, seq 1 -->
           <tr class="header">
@@ -203,8 +204,8 @@
             {% endfor %}
           </tr>
 
-          <!-- Iterate through remaining rows, each corresponding to a letter in seq1 -->
-          {% for base in seq1 %}
+          <!-- Iterate through remaining rows, each corresponding to a letter in seq2 -->
+          {% for base in seq2 %}
           <tr>
             <!-- Always fill in seq2 and seq2 init -->
             <th class="header">{{base}}</th>
@@ -212,7 +213,7 @@
             {% set i = loop.index %}
 
             <!-- Iterate through columns in row, each corresponding to a letter in seq2 -->
-            {% for base in seq2 %}
+            {% for base in seq1 %}
               <!-- cell is created regardless -->
               <td>
                 <!-- Fill all cells in rows less than the maximum row value -->

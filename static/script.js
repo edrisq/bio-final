@@ -1,8 +1,8 @@
-$(document).ready(scrollTo("dptable"));
+// $(document).ready(scrollTo("dptable"));
 
-function scrollTo(hash) {
-  location.hash = "#" + hash;
-}
+// function scrollTo(hash) {
+//   location.hash = "#" + hash;
+// }
 
 // $(document).ready(function() {
 //   $('form').on('submit', function(event) {

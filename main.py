@@ -33,8 +33,8 @@ def table_opts():
     matrix = request.form['matrix']
     gap = request.form['gap']
     
-    imax = int(index) // len(seq1) + 1
-    jmax = int(index) % len(seq1) + 1
+    imax = int(index) % len(seq1) + 1
+    jmax = int(index) // len(seq1) + 1
 
     if algo == 'nw':
         (f, sources) = needleman_wunsch(seq1, seq2, matrix, gap)
@@ -71,8 +71,8 @@ def table_fill():
     elif int(step) == 3:
         index = len(seq1) * len(seq2) - 1
     
-    imax = int(index) // len(seq1) + 1
-    jmax = int(index) % len(seq1) + 1
+    imax = int(index) % len(seq1) + 1
+    jmax = int(index) // len(seq1) + 1
 
     # return jsonify({'seq1' : seq1, 'seq2' : seq2, 'index' : index, 'algo' : algo, 'matrix' : matrix, 
     #                 'gap' : gap, 'f': f, 'sources': sources, 'imax': imax, 'jmax': jmax})
@@ -96,8 +96,8 @@ def table_trace():
         icurr = int(request.form['icurr'])
         jcurr = int(request.form['jcurr'])
         source = sources[icurr][jcurr][0]
-        icurr = int(icurr) + int(source[0])
-        jcurr = int(jcurr)  + int(source[1])
+        icurr = int(icurr) + int(source[1])
+        jcurr = int(jcurr)  + int(source[0])
 
         if algo == 'sw' and f[icurr][jcurr] <= 1:
             raise exception
@@ -110,7 +110,7 @@ def table_trace():
                         max_val = val
                         icurr, jcurr = (i, j)
         else:
-            icurr, jcurr = (len(seq1), len(seq2))
+            icurr, jcurr = (len(seq2), len(seq1))
 
     # if int(trace_step) == -1:
     #     next
