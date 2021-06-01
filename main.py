@@ -3,7 +3,7 @@ import datetime
 from fasta.fasta import acc_to_ORFs
 from fasta.align import needleman_wunsch, smith_waterman
 
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, jsonify
 
 app = Flask(__name__)
 
@@ -13,25 +13,32 @@ def root():
 
 @app.route('/table_init', methods=['GET','POST'])
 def table_init():
-    seq1 = request.form.get('seq1')
-    seq2 = request.form.get('seq2')
+    seq1 = request.form['seq1']
+    seq2 = request.form['seq2']
 
     return render_template('init.html', seq1=seq1, seq2=seq2)
 
 @app.route('/table_fill', methods=['GET', 'POST'])
 def table_fill():
-    seq1 = request.form.get('seq1')
-    seq2 = request.form.get('seq2')
-    algo = request.form.get('algo')
-    matrix = request.form.get('matrix')
-    gap = request.form.get('gap')
+    seq1 = request.form['seq1']
+    seq2 = request.form['seq2']
+    index = request.form['index']
+    algo = request.form['algo']
+    matrix = request.form['matrix']
+    gap = request.form['gap']
+
+    imax = int(index) // len(seq1) + 1
+    jmax = int(index) % len(seq1) + 1
 
     if algo == 'nw':
         (f, sources) = needleman_wunsch(seq1, seq2, matrix, gap)
     else:
         (f, sources) = smith_waterman(seq1, seq2, matrix, gap)
 
-    return render_template('fill.html', seq1=seq1, seq2=seq2, algo=algo, matrix=matrix, gap=gap, f=f, sources=sources)
+    # return jsonify({'seq1' : seq1, 'seq2' : seq2, 'index' : index, 'algo' : algo, 'matrix' : matrix, 
+    #                 'gap' : gap, 'f': f, 'sources': sources, 'imax': imax, 'jmax': jmax})
+    return render_template('fill.html', seq1=seq1, seq2=seq2, index=index, algo=algo, 
+                            matrix=matrix, gap=gap, f=f, sources=sources, imax=imax, jmax=jmax)
 
 @app.route('/orf_finder')
 def orf_root():

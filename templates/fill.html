@@ -4,6 +4,8 @@
 {% block content %}
 
 <body>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+              
     <h1>Sequence Alignment</h1>
 
     <form action="table_init" method="POST" enctype="multipart/form-data">
@@ -15,6 +17,7 @@
     <form action="table_fill" method="POST" enctype="multipart/form-data">
         <input type="hidden" name="seq1" value={{seq1}}> 
         <input type="hidden" name="seq2" value={{seq2}}>
+        <input type="hidden" name="index" value={{index}}>
         <p>Algorithm: 
             <select class="form-select" name="algo" data-width="fit">
               <option value="nw" {% if algo == 'nw' %} selected {% endif %}>Needleman-Wunsch (Global)</option>
@@ -33,28 +36,71 @@
         <p><input type="submit" name="submit" value="Align"></p>
     </form>
 
-    <table>
-        <tr>
+    <form action="table_fill" method="POST" enctype="multipart/form-data">
+      {% set index = index | int + 1 %}
+      <input type="hidden" name="seq1" value={{seq1}}> 
+      <input type="hidden" name="seq2" value={{seq2}}>
+      <input type="hidden" name="index" value={{index}}>
+      <input type="hidden" name="algo" value={{algo}}>
+      <input type="hidden" name="matrix" value={{matrix}}>
+      <input type="hidden" name="gap" value={{gap}}>
+      <p><input type="submit" name="submit" value="Step"></p>
+    </form>
+
+    <table class="dptable">
+        <tr class="header">
           <td class="no_border"></td>
           <td class="no_border"></td>
           {% for base in seq1 %}
             <th> {{ base }} </th>
           {% endfor %}
           </tr>
-        <tr>
+        <tr class="header">
           <td class="no_border"></td>
           <td> {{f[0][0]}} </td>
           {% for base in seq1 %}
-            <td> {{ f[0][loop.index] }} </td>
+            <td> 
+              {{ f[0][loop.index] }}
+            </td>
           {% endfor %}
         </tr>
         {% for base in seq2 %}
         <tr>
-          <th>{{base}}</th>
-          <td> {{f[loop.index][0]}} </td>
+          <th class="header">{{base}}</th>
+          <td class="header"> {{f[loop.index][0]}} </td>
           {% set i = loop.index %}
           {% for base in seq1 %}
-            <td> {{f[i][loop.index]}} </td>
+            <td>
+              {% if i < imax | int %}
+                {{f[i][loop.index]}}
+                {% for source in sources[i][loop.index] %}
+                  {% if source == (0, -1) %}
+                    <img src="{{url_for('static', filename='images/right.svg')}}" class="right" />
+                  {% endif %}
+                  {% if source == (-1, -1) %}
+                    <img src="{{url_for('static', filename='images/ddown.svg')}}" class="ddown" />
+                  {% endif %}
+                  {% if source == (-1, 0) %}
+                    <img src="{{url_for('static', filename='images/down.svg')}}" class="down" />
+                  {% endif %}
+                {% endfor %}
+              {% elif i == imax | int %}
+                {% if loop.index <= jmax | int %}
+                  {{f[i][loop.index]}}
+                  {% for source in sources[i][loop.index] %}
+                    {% if source == (0, -1) %}
+                      <img src="{{url_for('static', filename='images/right.svg')}}" class="right" />
+                    {% endif %}
+                    {% if source == (-1, -1) %}
+                      <img src="{{url_for('static', filename='images/ddown.svg')}}" class="ddown" />
+                    {% endif %}
+                    {% if source == (-1, 0) %}
+                      <img src="{{url_for('static', filename='images/down.svg')}}" class="down" />
+                    {% endif %}
+                  {% endfor %}
+                {% endif %}
+              {% endif %}
+            </td>
           {% endfor %}
         </tr>
         {% endfor %}

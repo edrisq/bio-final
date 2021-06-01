@@ -25,6 +25,8 @@ td, th {
     height: 50px;
     border: 1px solid #ccc;
     text-align: center;
+    overflow: visible;
+    position: relative;
 }
 th {
     background: lightblue;
@@ -48,3 +50,34 @@ th {
 .no_border {
     border: 1px solid white;
 }
+.ddown {
+    position: absolute;
+    top: -15px;
+    left: -15px;
+}
+.down {
+    position: absolute;
+    top: -17px;
+    left: 10px;
+}
+.right {
+    position: absolute;
+    left: -13px;
+    top: 10px;
+}
+/* td:not(:first-child){    
+    opacity: 0;
+    animation-name: fadeIn;
+    animation-duration: 4s;
+    animation-iteration-count: 1;
+    animation-fill-mode: forwards;
+}
+@keyframes fadeIn {
+    from {
+      opacity: 0;
+    }
+    
+    to {
+      opacity: 1;
+    }
+  } */
