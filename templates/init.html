@@ -42,22 +42,22 @@
         <tr>
           <td class="no_border"></td>
           <td class="no_border"></td>
-          {% for base in seq1 %}
+          {% for base in seq2 %}
             <th> {{ base }} </th>
           {% endfor %}
           </tr>
         <tr>
           <td class="no_border"></td>
           <td></td>
-          {% for base in seq1 %}
+          {% for base in seq2 %}
             <td> </td>
           {% endfor %}
         </tr>
-        {% for base in seq2 %}
+        {% for base in seq1 %}
         <tr>
           <th> {{base}}</th>
           <td></td>
-          {% for base in seq1 %}
+          {% for base in seq2 %}
             <td> </td>
           {% endfor %}
         </tr>

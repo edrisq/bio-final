@@ -19,3 +19,7 @@ For Needleman-Wunsch (global alignment), this will start in the bottom right cor
 ##### Known funkiness
 
 I appear to unintentionally be saving some details between runs. This means that if you change the sequence alignment, for example, your trace-back arrow may be wrong for a single frame. The indexing was working correctly before the class demo, so I'm guessing I messed something up in my last set of edits. Not sure if the version with the indexing issue is the one on the repo or not.
+
+##### Post Deadline Update
+
+I decided to go back and figure out what the indexing issue was, now that I have had some sleep. It was two-fold: I had not "fixed" the issue on all of my templates AND the orientation of seq1 and seq2 were reversed in creating the DP table (relative to what would have been expected from the input). Either way, it is fixed now.

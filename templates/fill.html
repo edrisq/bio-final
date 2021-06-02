@@ -88,11 +88,11 @@
     </div>
 
     {% if icurr is not defined %}
-      {% set icurr = seq2|length %}
-      {% set jcurr = seq1|length %}
+      {% set icurr = seq1|length %}
+      {% set jcurr = seq2|length %}
       {% if step == "3" %}
-        {% set imax = seq2|length %}
-        {% set jmax = seq1|length %}
+        {% set imax = seq1|length %}
+        {% set jmax = seq2|length %}
       {% endif %}
     {% endif %}
 
@@ -104,16 +104,16 @@
           <tr class="header">
             <td class="no_border"></td>
             <td class="no_border"></td>
-            {% for base in seq1 %}
+            {% for base in seq2 %}
               <th> {{ base }} </th>
             {% endfor %}
             </tr>
 
-          <!-- Second row, seq 1 init -->
+          <!-- Second row, seq 2 init -->
           <tr class="header">
             <td class="no_border"></td>
             <td> {% if f is defined %} {{f[0][0]}} {% endif %} </td>
-            {% for base in seq1 %}
+            {% for base in seq2 %}
               <td> 
                 {% if f is defined %} 
                 {{ f[0][loop.index] }}
@@ -123,7 +123,7 @@
           </tr>
 
           <!-- Iterate through remaining rows, each corresponding to a letter in seq2 -->
-          {% for base in seq2 %}
+          {% for base in seq1 %}
           <tr>
             <!-- Always fill in seq2 and seq2 init -->
             <th class="header">{{base}}</th>
@@ -131,7 +131,7 @@
             {% set i = loop.index %}
 
             <!-- Iterate through columns in row, each corresponding to a letter in seq2 -->
-            {% for base in seq1 %}
+            {% for base in seq2 %}
               <!-- cell is created regardless -->
               <td>
                 <!-- Fill all cells in rows less than the maximum row value -->
@@ -182,13 +182,12 @@
 
     {% else %}
     <div>
-
       <table class="dptable">
           <!-- First row, seq 1 -->
           <tr class="header">
             <td class="no_border"></td>
             <td class="no_border"></td>
-            {% for base in seq1 %}
+            {% for base in seq2 %}
               <th> {{ base }} </th>
             {% endfor %}
             </tr>
@@ -197,7 +196,7 @@
           <tr class="header">
             <td class="no_border"></td>
             <td> {{f[0][0]}} </td>
-            {% for base in seq1 %}
+            {% for base in seq2 %}
               <td> 
                 {{ f[0][loop.index] }}
               </td>
@@ -205,7 +204,7 @@
           </tr>
 
           <!-- Iterate through remaining rows, each corresponding to a letter in seq2 -->
-          {% for base in seq2 %}
+          {% for base in seq1 %}
           <tr>
             <!-- Always fill in seq2 and seq2 init -->
             <th class="header">{{base}}</th>
@@ -213,7 +212,7 @@
             {% set i = loop.index %}
 
             <!-- Iterate through columns in row, each corresponding to a letter in seq2 -->
-            {% for base in seq1 %}
+            {% for base in seq2 %}
               <!-- cell is created regardless -->
               <td>
                 <!-- Fill all cells in rows less than the maximum row value -->
